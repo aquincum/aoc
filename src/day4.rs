@@ -1,12 +1,12 @@
-use std::str::FromStr;
-use std::num::ParseIntError;
-use std::error::Error;
 use std::borrow::Borrow;
+use std::error::Error;
+use std::num::ParseIntError;
+use std::str::FromStr;
 
 #[derive(Copy, Clone)]
 struct Elf {
     from: i32,
-    to: i32
+    to: i32,
 }
 
 impl FromStr for Elf {
@@ -17,12 +17,15 @@ impl FromStr for Elf {
         if ends.len() != 2 {
             return Err(format!("Elf {} doesn't have two ends", s));
         }
-        let from = ends[0].parse::<i32>().map_err(|e| format!("first elf: {}: {}",ends[0],e))?;
-        let to = ends[1].parse::<i32>().map_err(|e| format!("second elf: {}: {}",ends[1], e))?;
-        Ok(Elf{from, to })
+        let from = ends[0]
+            .parse::<i32>()
+            .map_err(|e| format!("first elf: {}: {}", ends[0], e))?;
+        let to = ends[1]
+            .parse::<i32>()
+            .map_err(|e| format!("second elf: {}: {}", ends[1], e))?;
+        Ok(Elf { from, to })
     }
 }
-
 
 struct ElfPair(Elf, Elf);
 
@@ -46,11 +49,10 @@ impl ElfPair {
         first_bigger || second_bigger
     }
 
-    fn overlap_at_all(&self) -> bool{
+    fn overlap_at_all(&self) -> bool {
         self.0.to >= self.1.from && self.0.from <= self.1.to
     }
 }
-
 
 pub fn q1(input: &str) -> usize {
     let elfpairs = input.lines().map(|s| s.parse::<ElfPair>().unwrap());
