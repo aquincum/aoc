@@ -9,6 +9,24 @@ struct Position {
     col: i32
 }
 
+
+//    0123456789
+// -5 ..........
+// -4 .......H..
+// -3 .....21...
+// -2 ..543.....
+// -1 .76.......
+// 0  8.........
+//
+//    0123456789
+// -5 .......H..
+// -4 ......21..
+// -3 ......3...
+// -2 ..54......
+// -1 .76.......
+// 0  8.........
+
+
 impl Position {
     fn zero() -> Self {
         Position{row: 0, col: 0}
@@ -17,8 +35,8 @@ impl Position {
         match d {
             Direction::Right => self.col += 1,
             Direction::Left => self.col -= 1,
-            Direction::Up => self.row += 1,
-            Direction::Down => self.row -= 1,
+            Direction::Up => self.row -= 1,
+            Direction::Down => self.row += 1,
         }
     }
 }
@@ -42,6 +60,11 @@ fn new_tail(head: &Position, tail: &Position) -> Position {
         return tail.clone();
     }
     match (dist.row, dist.col) {
+        (2,2) => Position{row: head.row-1, col: head.col-1},
+        (2,-2) => Position{row: head.row-1, col: head.col+1},
+        (-2,2) => Position{row: head.row+1, col: head.col-1},
+        (-2,-2) => Position{row: head.row+1, col: head.col+1},
+
         (2,_) => Position{ row: head.row-1, col: head.col },
         (-2,_) => Position{ row: head.row+1, col: head.col },
         (_,2) => Position{ row: head.row, col: head.col-1 },
@@ -121,15 +144,51 @@ impl IntoIterator for InputMoves{
 
 pub fn question(input: &str){
     let moves = input.split("\n").map(|l| l.parse::<InputMoves>().unwrap());
-    let mut head = Position::zero();
-    let mut tail = Position::zero();
+    const nodes_n: usize = 10;
+    let mut nodes = [Position::zero(); nodes_n];
     let mut seen_map = HashSet::new();
     for mvs in moves {
         for dir in mvs {
-            head.update(dir);
-            tail = new_tail(&head, &tail);
-            seen_map.insert(tail);
+            nodes[0].update(dir);
+            // println!("\nMOVE: {:?}", dir);
+            // println!("head: {:?}", nodes[0]);
+            for i in 1..nodes_n {
+                nodes[i] = new_tail(&nodes[i-1], &nodes[i]);
+                // println!("{} is at {:?}", i, nodes[i]);
+            }
+            seen_map.insert(nodes[nodes_n-1]);
+            // for i in -20..20 {
+            //     for j in -20..20 {
+            //         for k in 0..nodes_n {
+            //             let pos = Position{row: i, col: j};
+            //             if nodes[k] == pos {
+            //                 print!("{}", k);
+            //                 break;
+            //             } else if k == nodes_n -1 {
+            //                 print!(".");
+            //             }
+            //         }
+            //     }
+            //     print!("\n");
+            // }
         }
+
+    }
+    let min_row = seen_map.iter().min_by_key(|&&k| k.row).unwrap().row;
+    let max_row = seen_map.iter().max_by_key(|&&k| k.row).unwrap().row;
+    let min_col = seen_map.iter().min_by_key(|&&k| k.col).unwrap().col;
+    let max_col = seen_map.iter().max_by_key(|&&k| k.col).unwrap().col;
+    println!("Dimensions: row [{},{}] column [{},{}]", min_row, max_row, min_col, max_col);
+    for i in min_row..max_row+1 {
+        for j in min_col..max_col+1 {
+            if seen_map.contains(&Position{row: i, col: j}) {
+                print!("#");
+            }
+            else {
+                print!(".");
+            }
+        }
+        print!("\n");
     }
     println!("{}",seen_map.len());
 }
