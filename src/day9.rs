@@ -1,14 +1,13 @@
-use std::ops::{Sub, AddAssign};
-use std::str::FromStr;
-use std::num::ParseIntError;
 use std::collections::{HashMap, HashSet};
+use std::num::ParseIntError;
+use std::ops::{AddAssign, Sub};
+use std::str::FromStr;
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Hash)]
 struct Position {
     row: i32,
-    col: i32
+    col: i32,
 }
-
 
 //    0123456789
 // -5 ..........
@@ -26,10 +25,9 @@ struct Position {
 // -1 .76.......
 // 0  8.........
 
-
 impl Position {
     fn zero() -> Self {
-        Position{row: 0, col: 0}
+        Position { row: 0, col: 0 }
     }
     fn update(&mut self, d: Direction) {
         match d {
@@ -40,8 +38,6 @@ impl Position {
         }
     }
 }
-
-
 
 impl Sub for &Position {
     type Output = Position;
@@ -60,22 +56,49 @@ fn new_tail(head: &Position, tail: &Position) -> Position {
         return tail.clone();
     }
     match (dist.row, dist.col) {
-        (2,2) => Position{row: head.row-1, col: head.col-1},
-        (2,-2) => Position{row: head.row-1, col: head.col+1},
-        (-2,2) => Position{row: head.row+1, col: head.col-1},
-        (-2,-2) => Position{row: head.row+1, col: head.col+1},
+        (2, 2) => Position {
+            row: head.row - 1,
+            col: head.col - 1,
+        },
+        (2, -2) => Position {
+            row: head.row - 1,
+            col: head.col + 1,
+        },
+        (-2, 2) => Position {
+            row: head.row + 1,
+            col: head.col - 1,
+        },
+        (-2, -2) => Position {
+            row: head.row + 1,
+            col: head.col + 1,
+        },
 
-        (2,_) => Position{ row: head.row-1, col: head.col },
-        (-2,_) => Position{ row: head.row+1, col: head.col },
-        (_,2) => Position{ row: head.row, col: head.col-1 },
-        (_,-2) => Position{ row: head.row, col: head.col+1 },
-        _ => panic!("yeah no. {:?} {:?} {:?}", head, tail, dist)
+        (2, _) => Position {
+            row: head.row - 1,
+            col: head.col,
+        },
+        (-2, _) => Position {
+            row: head.row + 1,
+            col: head.col,
+        },
+        (_, 2) => Position {
+            row: head.row,
+            col: head.col - 1,
+        },
+        (_, -2) => Position {
+            row: head.row,
+            col: head.col + 1,
+        },
+        _ => panic!("yeah no. {:?} {:?} {:?}", head, tail, dist),
     }
 }
 
 #[derive(Copy, Clone, Debug)]
 enum Direction {
-    Right, Left, Up, Down
+    Right,
+    Left,
+    Up,
+    Down,
 }
 
 impl FromStr for Direction {
@@ -88,7 +111,7 @@ impl FromStr for Direction {
             "L" => Ok(Left),
             "U" => Ok(Up),
             "D" => Ok(Down),
-            _ => Err(format!("{} is unknown direction", s))
+            _ => Err(format!("{} is unknown direction", s)),
         }
     }
 }
@@ -98,12 +121,12 @@ struct InputMoves {
     amount: i32,
 }
 
-impl FromStr for InputMoves{
+impl FromStr for InputMoves {
     type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let parts = s.split_whitespace().collect::<Vec<_>>();
-        Ok(InputMoves{
+        Ok(InputMoves {
             direction: parts[0].parse()?,
             amount: parts[1].parse().map_err(|e: ParseIntError| e.to_string())?,
         })
@@ -115,7 +138,7 @@ struct InputMovesIterator {
     next_idx: i32,
 }
 
-impl Iterator for InputMovesIterator{
+impl Iterator for InputMovesIterator {
     type Item = Direction;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -125,24 +148,24 @@ impl Iterator for InputMovesIterator{
         } else {
             Some(mv.direction)
         };
-        self.next_idx+=1;
+        self.next_idx += 1;
         rv
     }
 }
 
-impl IntoIterator for InputMoves{
+impl IntoIterator for InputMoves {
     type Item = Direction;
     type IntoIter = InputMovesIterator;
 
     fn into_iter(self) -> Self::IntoIter {
-        InputMovesIterator{
+        InputMovesIterator {
             moves: Box::new(self),
             next_idx: 1,
         }
     }
 }
 
-pub fn question(input: &str){
+pub fn question(input: &str) {
     let moves = input.split("\n").map(|l| l.parse::<InputMoves>().unwrap());
     const nodes_n: usize = 10;
     let mut nodes = [Position::zero(); nodes_n];
@@ -153,10 +176,10 @@ pub fn question(input: &str){
             // println!("\nMOVE: {:?}", dir);
             // println!("head: {:?}", nodes[0]);
             for i in 1..nodes_n {
-                nodes[i] = new_tail(&nodes[i-1], &nodes[i]);
+                nodes[i] = new_tail(&nodes[i - 1], &nodes[i]);
                 // println!("{} is at {:?}", i, nodes[i]);
             }
-            seen_map.insert(nodes[nodes_n-1]);
+            seen_map.insert(nodes[nodes_n - 1]);
             // for i in -20..20 {
             //     for j in -20..20 {
             //         for k in 0..nodes_n {
@@ -172,23 +195,24 @@ pub fn question(input: &str){
             //     print!("\n");
             // }
         }
-
     }
     let min_row = seen_map.iter().min_by_key(|&&k| k.row).unwrap().row;
     let max_row = seen_map.iter().max_by_key(|&&k| k.row).unwrap().row;
     let min_col = seen_map.iter().min_by_key(|&&k| k.col).unwrap().col;
     let max_col = seen_map.iter().max_by_key(|&&k| k.col).unwrap().col;
-    println!("Dimensions: row [{},{}] column [{},{}]", min_row, max_row, min_col, max_col);
-    for i in min_row..max_row+1 {
-        for j in min_col..max_col+1 {
-            if seen_map.contains(&Position{row: i, col: j}) {
+    println!(
+        "Dimensions: row [{},{}] column [{},{}]",
+        min_row, max_row, min_col, max_col
+    );
+    for i in min_row..max_row + 1 {
+        for j in min_col..max_col + 1 {
+            if seen_map.contains(&Position { row: i, col: j }) {
                 print!("#");
-            }
-            else {
+            } else {
                 print!(".");
             }
         }
         print!("\n");
     }
-    println!("{}",seen_map.len());
+    println!("{}", seen_map.len());
 }
