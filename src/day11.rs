@@ -1,7 +1,7 @@
-use std::num::ParseIntError;
-use std::str::FromStr;
 use itertools::Itertools;
+use std::num::ParseIntError;
 use std::ops::{Div, Range};
+use std::str::FromStr;
 
 #[derive(Copy, Clone, Debug)]
 enum MonkeyOperationExpr {
@@ -39,7 +39,7 @@ impl MonkeyOperation {
         let right = self.right.value(old);
         match self.op {
             MonkeyOperationOperator::Plus => left + right,
-            MonkeyOperationOperator::Minus => left -right,
+            MonkeyOperationOperator::Minus => left - right,
             MonkeyOperationOperator::Mul => left * right,
             MonkeyOperationOperator::Div => left / right,
         }
@@ -128,22 +128,33 @@ impl FromStr for MonkeyTest {
         if test_words[0] != "Test:" || test_words[1] != "divisible" || test_words[2] != "by" {
             return Err(format!("Weird test: {}", lines[0]));
         }
-        let divisible = test_words[3].parse().map_err(|e: ParseIntError| e.to_string())?;
+        let divisible = test_words[3]
+            .parse()
+            .map_err(|e: ParseIntError| e.to_string())?;
 
         let true_words = lines[1].split_whitespace().collect_vec();
-        if true_words[0] != "If" || true_words[1] !=  "true:" { // rest less interesting
-            return Err(format!("Weird true: {}", lines[1]))
+        if true_words[0] != "If" || true_words[1] != "true:" {
+            // rest less interesting
+            return Err(format!("Weird true: {}", lines[1]));
         }
-        let if_true = true_words[true_words.len()-1].parse().map_err(|e: ParseIntError| e.to_string())?;
+        let if_true = true_words[true_words.len() - 1]
+            .parse()
+            .map_err(|e: ParseIntError| e.to_string())?;
 
         let false_words = lines[2].split_whitespace().collect_vec();
-        if false_words[0] != "If" || false_words[1] !=  "false:" { // rest less interesting
-            return Err(format!("Weird false: {}", lines[1]))
+        if false_words[0] != "If" || false_words[1] != "false:" {
+            // rest less interesting
+            return Err(format!("Weird false: {}", lines[1]));
         }
-        let if_false = false_words[false_words.len()-1].parse().map_err(|e: ParseIntError| e.to_string())?;
+        let if_false = false_words[false_words.len() - 1]
+            .parse()
+            .map_err(|e: ParseIntError| e.to_string())?;
 
-
-        Ok(MonkeyTest{divisible, if_false, if_true })
+        Ok(MonkeyTest {
+            divisible,
+            if_false,
+            if_true,
+        })
     }
 }
 
@@ -166,7 +177,10 @@ impl FromStr for Monkey {
         if items_line.len() != 2 || items_line[0].trim() != "Starting items" {
             return Err(format!("Weird items line: {}", lines[1]));
         }
-        let items: Result<Vec<i128>, _>= items_line[1].split(", ").map(|s| s.parse().map_err(|e: ParseIntError| e.to_string())).collect();
+        let items: Result<Vec<i128>, _> = items_line[1]
+            .split(", ")
+            .map(|s| s.parse().map_err(|e: ParseIntError| e.to_string()))
+            .collect();
 
         let op_line = lines[2].split("Operation: new = ").collect_vec();
         if op_line.len() != 2 {
@@ -176,8 +190,7 @@ impl FromStr for Monkey {
 
         let test = lines[3..6].join("\n").parse()?;
 
-
-        Ok(Monkey{
+        Ok(Monkey {
             n,
             items: items?,
             operation,
@@ -188,7 +201,10 @@ impl FromStr for Monkey {
 }
 
 fn read_monkeys(input: &str) -> Vec<Monkey> {
-    input.split("\n\n").map(|l| l.parse().unwrap()).collect_vec()
+    input
+        .split("\n\n")
+        .map(|l| l.parse().unwrap())
+        .collect_vec()
 }
 
 pub fn question(input: &str, which_question: usize) {
@@ -208,16 +224,22 @@ pub fn question(input: &str, which_question: usize) {
     let monkeys = read_monkeys(input);
     let alldiv = monkeys.iter().fold(1, |acc, m| acc * m.test.divisible);
     println!("Kozos: {}", alldiv);
-    let range_end = if which_question == 1 { 20 } else {10000};
-    let mut endmonkeys = Range{start: 0, end: range_end}.fold(monkeys.to_owned(), |round_state, i| {
+    let range_end = if which_question == 1 { 20 } else { 10000 };
+    let mut endmonkeys = Range {
+        start: 0,
+        end: range_end,
+    }
+    .fold(monkeys.to_owned(), |round_state, i| {
         let newmonkeys = round_state.iter().fold(round_state.to_owned(), |state, m| {
             let mut newstate = state.to_owned();
             let n_items = state[m.n].items.len();
             for item in state[m.n].items.iter() {
                 let worry = state[m.n].operation.execute(item.clone());
                 let worry = if which_question == 1 {
-                     worry / 3
-                } else { worry };
+                    worry / 3
+                } else {
+                    worry
+                };
                 let throw_to = state[m.n].test.throw_to(worry);
                 newstate[throw_to].items.push(worry % (alldiv as i128));
             }
@@ -227,13 +249,26 @@ pub fn question(input: &str, which_question: usize) {
         });
         println!("ROUND {}", i);
         for monkey in newmonkeys.iter() {
-            println!("Monkey {}: {} -- insp {}", monkey.n, monkey.items.iter().map(ToString::to_string).join(", "), monkey.inspected)
+            println!(
+                "Monkey {}: {} -- insp {}",
+                monkey.n,
+                monkey.items.iter().map(ToString::to_string).join(", "),
+                monkey.inspected
+            )
         }
         newmonkeys
     });
     endmonkeys.sort_by(|m, m2| m2.inspected.cmp(&m.inspected));
     for monkey in endmonkeys.iter() {
-        println!("Monkey {}: {} -- insp {}", monkey.n, monkey.items.iter().map(ToString::to_string).join(", "), monkey.inspected)
+        println!(
+            "Monkey {}: {} -- insp {}",
+            monkey.n,
+            monkey.items.iter().map(ToString::to_string).join(", "),
+            monkey.inspected
+        )
     }
-    println!("FINAL SCORE OF MONKEY BUSINESS: {}", endmonkeys[0].inspected * endmonkeys[1].inspected)
+    println!(
+        "FINAL SCORE OF MONKEY BUSINESS: {}",
+        endmonkeys[0].inspected * endmonkeys[1].inspected
+    )
 }
