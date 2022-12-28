@@ -1,9 +1,9 @@
 use itertools::Itertools;
 use regex::Regex;
+use std::collections::HashSet;
 use std::fmt::{Display, Formatter};
 use std::num::ParseIntError;
 use std::str::FromStr;
-use std::collections::HashSet;
 //
 // enum Spot {
 //     Beacon,
@@ -110,7 +110,7 @@ pub fn q2(input: &str) {
     let sensors: Result<Vec<Sensor>, _> = input.split("\n").map(|l| l.parse()).collect();
     let sensors = sensors.unwrap();
 
-    let beacons: HashSet<(i64,i64)> = sensors.iter().map(|s| (s.bx, s.by)).collect();
+    let beacons: HashSet<(i64, i64)> = sensors.iter().map(|s| (s.bx, s.by)).collect();
 
     const search_space: i64 = 4000000;
     for y in 0..search_space {
@@ -127,10 +127,10 @@ pub fn q2(input: &str) {
                 curr_end = Some(sp.1);
             } else {
                 let ce = curr_end.unwrap();
-                if ce+1 < sp.0 {
-                    println!("{}: {}-{}", y, ce+1, sp.0 -1);
-                    if !beacons.contains(&(sp.0-1, y)) {
-                        println!("^^ FOUND: {}", (sp.0-1)*4000000 + y);
+                if ce + 1 < sp.0 {
+                    println!("{}: {}-{}", y, ce + 1, sp.0 - 1);
+                    if !beacons.contains(&(sp.0 - 1, y)) {
+                        println!("^^ FOUND: {}", (sp.0 - 1) * 4000000 + y);
                     }
                     curr_end = Some(sp.1);
                 } else if ce < sp.1 {

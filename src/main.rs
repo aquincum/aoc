@@ -11,6 +11,8 @@ mod day14;
 mod day15;
 mod day16;
 mod day17;
+mod day18;
+mod day19;
 mod day2;
 mod day3;
 mod day4;
@@ -38,5 +40,5 @@ fn main() {
     // let result_q2 = day6::question(&input, 14);
     // println!("{:?} {:?}", result_q1, result_q2)
     // day14::question(&input, Question::Second);
-    day17::question(&input);
+    day19::question(day19::DEMO_INPUT);
 }
