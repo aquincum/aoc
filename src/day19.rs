@@ -150,7 +150,7 @@ impl Blueprint {
             obsidian: 0,
             geode: 0
         }], |acc, i| {
-            println!("{}: {:?} states", i, acc.len());
+            println!("Bp {}: {}: {:?} states", self.id, i, acc.len());
             let options = acc.iter().flat_map(|s| {
                 let no_build = s.step();
                 let new_ore = if s.ore >= self.ore_ore {
@@ -168,7 +168,6 @@ impl Blueprint {
                 [Some(no_build), new_ore, new_clay, new_obsidian, new_geode].into_iter().filter_map(|x| *x).collect::<Vec<State>>()
             });
             let future_options: HashSet<State> = options.collect();
-            println!("  UH {}", future_options.iter().filter(|s| s.geode_bot != 0).count());
             let best_geode = future_options.iter().max_by_key(|s| s.geode).map(|s| s.geode).unwrap_or(0);
             future_options.into_iter().filter_map(|s| {
                   if s.geode_bot + s.geode + 1 < best_geode {

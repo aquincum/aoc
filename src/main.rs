@@ -40,5 +40,5 @@ fn main() {
     // let result_q2 = day6::question(&input, 14);
     // println!("{:?} {:?}", result_q1, result_q2)
     // day14::question(&input, Question::Second);
-    day19::question(day19::DEMO_INPUT);
+    day19::question(&input);
 }
