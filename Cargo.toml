@@ -3,6 +3,7 @@ name = "aoc"
 version = "0.1.0"
 authors = ["Daniel Szeredi <daniel@szeredi.hu>"]
 edition = "2018"
+description =  "Advent of Code solutions for 2022"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -11,4 +12,5 @@ itertools = "0.10.5"
 serde_json = "1.0.89"
 serde = {version = "1.0.150", features = ["derive"]}
 regex = "1.7.0"
-
+clap = { version = "4.0.32", features = ["derive"] }
+phf = { version = "0.11.1", features = ["macros"] }

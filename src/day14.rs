@@ -1,10 +1,22 @@
 use crate::common::map::{Bottom, Map};
-use crate::Question;
+use crate::common::day::{Question, Day};
 use itertools::Itertools;
 use serde_json::ser::CharEscape::LineFeed;
 use std::borrow::Borrow;
 use std::fmt::{Display, Formatter};
 use std::str::Split;
+
+pub struct Day14;
+impl Day for Day14 {
+    fn question(&self, input: &str, question: Question) {
+        self::question(input, question);
+    }
+
+    fn test_data(&self) -> String {
+        "498,4 -> 498,6 -> 496,6
+503,4 -> 502,4 -> 502,9 -> 494,9".to_string()
+    }
+}
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub(crate) enum Object {

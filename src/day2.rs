@@ -1,4 +1,25 @@
 use std::str::FromStr;
+use crate::common::day::{Day, Question};
+
+
+pub struct Day2;
+
+impl Day for Day2 {
+    fn question(&self, input: &str, question: Question) {
+        let result = match question {
+            Question::First => q1(input),
+            Question::Second => q2(input),
+        };
+        println!("{}",result);
+    }
+
+    fn test_data(&self) -> String {
+        return "A Y
+B X
+C Z".to_string()
+    }
+}
+
 
 #[derive(PartialEq, Copy, Clone)]
 enum RPS {

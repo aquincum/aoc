@@ -2,13 +2,24 @@ use std::num::ParseIntError;
 use std::str::{FromStr, Split};
 
 use regex::Regex;
-use crate::Question;
+use crate::common::day::{Question, Day};
 use std::convert::identity;
 use itertools::Itertools;
 use std::collections::HashSet;
 
 pub const DEMO_INPUT: &str = "Blueprint 1: Each ore robot costs 4 ore. Each clay robot costs 2 ore. Each obsidian robot costs 3 ore and 14 clay. Each geode robot costs 2 ore and 7 obsidian.
 Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsidian robot costs 3 ore and 8 clay. Each geode robot costs 3 ore and 12 obsidian.";
+pub struct Day19;
+
+impl Day for Day19 {
+    fn question(&self, input: &str, question: Question) {
+        self::question(input, question);
+    }
+
+    fn test_data(&self) -> String {
+        DEMO_INPUT.to_string()
+    }
+}
 
 type Cost = u32;
 type Quantity = u32;
@@ -183,13 +194,19 @@ impl Blueprint {
                     Some(s)
                 }
             }).collect()
-        }).iter().map(|s| s.geode).max().unwrap_or(0) * self.id as u32
+        }).iter().map(|s| s.geode).max().unwrap_or(0)
     }
 }
 
-pub fn question(input: &str){
+pub fn question(input: &str, question: Question){
     let blueprints: Result<Vec<Blueprint>, _> = input.lines().map(|l| l.parse()).collect();
-    let blueprints = blueprints.unwrap();
-    let sum: Quantity = blueprints.iter().map(|b| b.run_blueprint(24)).sum();
-    println!("{}", sum);
+    let blueprints = match question {
+        Question::First => blueprints.unwrap(),
+        Question::Second => blueprints.unwrap().into_iter().take(3).collect_vec()
+    };
+    let result: Quantity = match question {
+        Question::First => blueprints.iter().map(|b| b.run_blueprint(24) * b.id as u32).sum(),
+        Question::Second => blueprints.iter().map(|b| b.run_blueprint(32)).product()
+    };
+    println!("{}", result);
 }

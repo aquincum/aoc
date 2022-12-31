@@ -1,11 +1,27 @@
 use std::fmt::{Display, Formatter};
 use std::io::{stdin, Read};
 use std::ops::Add;
+use crate::common::day::{Day, Question};
 
 const WIDTH: usize = 7;
 const ROW_MEMORY: usize = 13;
 
 type Bitmap = u128;
+
+pub struct Day17;
+impl Day for Day17 {
+    fn question(&self, input: &str, question: Question) {
+        self::question(input, match question{
+            Question::First => 2022,
+            Question::Second => 1000000000000,
+        });
+    }
+
+    fn test_data(&self) -> String {
+        ">>><<><>><<<>><>>><<<>>><<<><<<>><>><<>>".to_string()
+    }
+}
+
 
 #[derive(Copy, Clone, Eq, PartialEq, PartialOrd, Debug)]
 struct Coordinate {
@@ -215,7 +231,7 @@ fn print_state(field: &Field, tetris: Option<Tetris>) {
     }
 }
 
-pub fn question(input: &str) {
+pub fn question(input: &str, rounds: i128) {
     let mut field = Field::new();
     let mut active_tetris = None;
     let mut shape_rotation: i128 = 0;
@@ -271,7 +287,7 @@ pub fn question(input: &str) {
             field.set_in_stone(active_tetris.unwrap());
             active_tetris = None;
             shape_rotation += 1;
-            if shape_rotation == 2022 {
+            if shape_rotation == rounds {
                 break;
             }
             println!("Top now at {}: {}", shape_rotation, field.top_y());

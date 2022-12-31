@@ -3,6 +3,28 @@ use std::num::ParseIntError;
 use std::ops::{AddAssign, Sub};
 use std::str::FromStr;
 
+use crate::common::day::{Day, Question};
+
+pub struct Day9;
+
+impl Day for Day9 {
+    fn question(&self, input: &str, question: Question) {
+        crate::day9::question(input);
+    }
+
+    fn test_data(&self) -> String {
+        return "R 4
+U 4
+L 3
+D 1
+R 4
+D 1
+L 5
+R 2".to_string()
+    }
+}
+
+
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Hash)]
 struct Position {
     row: i32,

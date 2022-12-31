@@ -1,3 +1,32 @@
+use crate::common::day::{Day, Question};
+
+
+pub struct Day7;
+
+impl Day for Day7 {
+    fn question(&self, input: &str, question: Question) {
+        run_question(input);
+    }
+
+    fn test_data(&self) -> String {
+        return "- / (dir)
+  - a (dir)
+    - e (dir)
+      - i (file, size=584)
+    - f (file, size=29116)
+    - g (file, size=2557)
+    - h.lst (file, size=62596)
+  - b.txt (file, size=14848514)
+  - c.dat (file, size=8504156)
+  - d (dir)
+    - j (file, size=4060174)
+    - d.log (file, size=8033020)
+    - d.ext (file, size=5626152)
+    - k (file, size=7214296)".to_string()
+    }
+}
+
+
 #[derive(Debug)]
 enum Entry {
     EntryFile(File),
@@ -85,7 +114,7 @@ impl Directory {
     }
 }
 
-pub fn question(input: &str) {
+pub fn run_question(input: &str) {
     let mut root = Directory::new("/");
     let mut curr_path = "/".to_string();
     for line in input.lines() {

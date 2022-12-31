@@ -4,6 +4,40 @@ use serde_json::Value;
 use std::cmp::Ordering;
 use std::convert::TryFrom;
 use std::str::FromStr;
+use crate::common::day::{Day, Question};
+
+pub struct Day13;
+impl Day for Day13 {
+    fn question(&self, input: &str, question: Question) {
+        crate::day13::question(input)
+    }
+
+    fn test_data(&self) -> String {
+        "[1,1,3,1,1]
+[1,1,5,1,1]
+
+[[1],[2,3,4]]
+[[1],4]
+
+[9]
+[[8,7,6]]
+
+[[4,4],4,4]
+[[4,4],4,4,4]
+
+[7,7,7,7]
+[7,7,7]
+
+[]
+[3]
+
+[[[]]]
+[[]]
+
+[1,[2,[3,[4,[5,6,7]]]],8,9]
+[1,[2,[3,[4,[5,6,0]]]],8,9]".to_string()
+    }
+}
 
 #[derive(Debug, Deserialize, Eq, PartialEq, Clone)]
 enum Packet {

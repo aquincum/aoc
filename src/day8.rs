@@ -1,3 +1,22 @@
+use crate::common::day::{Day, Question};
+
+pub struct Day8;
+
+impl Day for Day8 {
+    fn question(&self, input: &str, question: Question) {
+        crate::day8::question(input);
+    }
+
+    fn test_data(&self) -> String {
+        return "30373
+25512
+65332
+33549
+35390".to_string()
+    }
+}
+
+
 pub fn question(input: &str) {
     let tree_map = input
         .lines()

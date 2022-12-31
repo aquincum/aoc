@@ -2,6 +2,23 @@ use itertools::Itertools;
 use std::convert::From;
 use std::slice::Iter;
 use std::str::FromStr;
+use crate::common::day::{Day, Question};
+
+pub struct Day12;
+impl Day for Day12 {
+    fn question(&self, input: &str, question: Question) {
+        todo!("Implemented in go so far")
+    }
+
+    fn test_data(&self) -> String {
+        "Sabqponm
+abcryxxl
+accszExk
+acctuvwj
+abdefghi".to_string()
+    }
+}
+
 
 struct Height {
     height: i8,

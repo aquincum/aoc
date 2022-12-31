@@ -4,6 +4,27 @@ use std::collections::HashMap;
 use std::fs::read_link;
 use std::num::ParseIntError;
 use std::str::FromStr;
+use crate::common::day::{Day, Question};
+
+pub struct Day16;
+impl Day for Day16 {
+    fn question(&self, input: &str, question: Question) {
+        question_fail1(input);
+    }
+
+    fn test_data(&self) -> String {
+        "Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
+Valve BB has flow rate=13; tunnels lead to valves CC, AA
+Valve CC has flow rate=2; tunnels lead to valves DD, BB
+Valve DD has flow rate=20; tunnels lead to valves CC, AA, EE
+Valve EE has flow rate=3; tunnels lead to valves FF, DD
+Valve FF has flow rate=0; tunnels lead to valves EE, GG
+Valve GG has flow rate=0; tunnels lead to valves FF, HH
+Valve HH has flow rate=22; tunnel leads to valve GG
+Valve II has flow rate=0; tunnels lead to valves AA, JJ
+Valve JJ has flow rate=21; tunnel leads to valve II".to_string()
+    }
+}
 
 type ValveId = String;
 type ValveMap = HashMap<ValveId, Valve>;

@@ -3,6 +3,47 @@ use std::num::ParseIntError;
 use std::ops::{Div, Range};
 use std::str::FromStr;
 
+use crate::common::day::{Day, Question};
+
+pub struct Day11;
+
+impl Day for Day11 {
+    fn question(&self, input: &str, question: Question) {
+        crate::day11::question(input, question);
+    }
+
+    fn test_data(&self) -> String {
+        return "Monkey 0:
+  Starting items: 79, 98
+  Operation: new = old * 19
+  Test: divisible by 23
+    If true: throw to monkey 2
+    If false: throw to monkey 3
+
+Monkey 1:
+  Starting items: 54, 65, 75, 74
+  Operation: new = old + 6
+  Test: divisible by 19
+    If true: throw to monkey 2
+    If false: throw to monkey 0
+
+Monkey 2:
+  Starting items: 79, 60, 97
+  Operation: new = old * old
+  Test: divisible by 13
+    If true: throw to monkey 1
+    If false: throw to monkey 3
+
+Monkey 3:
+  Starting items: 74
+  Operation: new = old + 3
+  Test: divisible by 17
+    If true: throw to monkey 0
+    If false: throw to monkey 1".to_string()
+    }
+}
+
+
 #[derive(Copy, Clone, Debug)]
 enum MonkeyOperationExpr {
     Old,
@@ -207,7 +248,7 @@ fn read_monkeys(input: &str) -> Vec<Monkey> {
         .collect_vec()
 }
 
-pub fn question(input: &str, which_question: usize) {
+pub fn question(input: &str, which_question: Question) {
     // let mut monkey = read_monkeys(input);
     //
     // for i in 0..20 {
@@ -224,7 +265,7 @@ pub fn question(input: &str, which_question: usize) {
     let monkeys = read_monkeys(input);
     let alldiv = monkeys.iter().fold(1, |acc, m| acc * m.test.divisible);
     println!("Kozos: {}", alldiv);
-    let range_end = if which_question == 1 { 20 } else { 10000 };
+    let range_end = if which_question == Question::First { 20 } else { 10000 };
     let mut endmonkeys = Range {
         start: 0,
         end: range_end,
@@ -235,7 +276,7 @@ pub fn question(input: &str, which_question: usize) {
             let n_items = state[m.n].items.len();
             for item in state[m.n].items.iter() {
                 let worry = state[m.n].operation.execute(item.clone());
-                let worry = if which_question == 1 {
+                let worry = if which_question == Question::First {
                     worry / 3
                 } else {
                     worry

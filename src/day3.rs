@@ -1,5 +1,28 @@
 use itertools::{Chunk, Itertools};
 use std::collections::HashMap;
+use crate::common::day::{Day, Question};
+
+
+pub struct Day3;
+
+impl Day for Day3 {
+    fn question(&self, input: &str, question: Question) {
+        let result = match question {
+            Question::First => q1(input),
+            Question::Second => q2(input),
+        };
+        println!("{}",result);
+    }
+
+    fn test_data(&self) -> String {
+        return "vJrwpWtwJgWrhcsFMMfFFhFp
+jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+PmmdzqPrVvPwwTWBwg
+wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+ttgJtRGJQctTZtZT
+CrZsJsPPZsGzwwsLwLmpwMDw".to_string()
+    }
+}
 
 fn lettermap(s: &str) -> HashMap<char, bool> {
     s.chars().map(|c| (c, true)).collect()

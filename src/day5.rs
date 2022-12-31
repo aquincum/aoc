@@ -1,6 +1,30 @@
 use itertools::Itertools;
 use std::str::FromStr;
 
+use crate::common::day::{Day, Question};
+
+
+pub struct Day5;
+
+impl Day for Day5 {
+    fn question(&self, input: &str, question: Question) {
+        let result = run_question(input, question);
+        println!("{}",result);
+    }
+
+    fn test_data(&self) -> String {
+        return "    [D]
+[N] [C]
+[Z] [M] [P]
+ 1   2   3
+
+move 1 from 2 to 1
+move 3 from 1 to 3
+move 2 from 2 to 1
+move 1 from 1 to 2".to_string()
+    }
+}
+
 struct CrateLine(Vec<String>);
 
 fn lines_to_stacks(lines: Vec<Vec<Option<char>>>) -> Vec<Vec<char>> {
@@ -58,7 +82,7 @@ impl FromStr for Move {
     }
 }
 
-pub fn question(input: &str) -> String {
+pub fn run_question(input: &str, question: Question) -> String {
     let mut lines_iter = input.lines();
     let cratelines: Vec<_> = lines_iter
         .take_while_ref(|l| l.trim().starts_with("["))
@@ -72,8 +96,12 @@ pub fn question(input: &str) -> String {
     lines_iter.next();
     let moves: Vec<Move> = lines_iter.map(|s| s.parse().unwrap()).collect();
     println!("{:#?}", moves);
+    let run_fn = match question {
+        Question::First => run_move_q1,
+        Question::Second => run_move_q2
+    };
     for mv in moves {
-        run_move_q2(&mut stacks, mv)
+        run_fn(&mut stacks, mv)
     }
     stacks
         .iter()

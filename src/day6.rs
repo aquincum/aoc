@@ -1,6 +1,30 @@
 use std::collections::{HashMap, VecDeque};
 
-pub fn question(input: &str, msg_length: usize) -> Option<usize> {
+use crate::common::day::{Day, Question};
+
+pub struct Day6;
+
+impl Day for Day6 {
+    fn question(&self, input: &str, question: Question) {
+        let msg_length = match question {
+            Question::First => 4usize,
+            Question::Second => 14usize,
+        };
+        let result = run_question(input, msg_length);
+        let result = match result {
+            None => "no message found".to_string(),
+            Some(r) => format!("{}", r)
+        };
+        println!("{}", result);
+    }
+
+    fn test_data(&self) -> String {
+        return "bvwbjplbgvbhsrlpgdmjqwftvncz".to_string()
+    }
+}
+
+
+fn run_question(input: &str, msg_length: usize) -> Option<usize> {
     let mut last_four = VecDeque::new();
     for (i, ch) in input.chars().enumerate() {
         last_four.push_back(ch);

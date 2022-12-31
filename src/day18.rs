@@ -1,4 +1,31 @@
-pub use bruteforce::q1;
+use crate::common::day::{Day, Question};
+
+pub struct Day18;
+impl Day for Day18 {
+    fn question(&self, input: &str, question: Question) {
+        if question == Question::First {
+            bruteforce::q1(input)
+        } else {
+            todo!("Not solved yet")
+        }
+    }
+
+    fn test_data(&self) -> String {
+        "2,2,2
+1,2,2
+3,2,2
+2,1,2
+2,3,2
+2,2,1
+2,2,3
+2,2,4
+2,2,6
+1,2,5
+3,2,5
+2,1,5
+2,3,5".to_string()
+    }
+}
 
 mod bruteforce {
     use std::num::ParseIntError;

@@ -1,17 +1,49 @@
-pub fn q1(input: String) -> i32 {
-    let elf_calories = get_elves(&input);
+use crate::common::day::{Day, Question};
+
+pub struct Day1;
+
+impl Day for Day1 {
+    fn question(&self, input: &str, question: Question) {
+        let result = match question {
+            Question::First => q1(input),
+            Question::Second => q2(input),
+        };
+        println!("{}",result);
+    }
+
+    fn test_data(&self) -> String {
+        return "1000
+2000
+3000
+
+4000
+
+5000
+6000
+
+7000
+8000
+9000
+
+10000".to_string()
+    }
+}
+
+
+fn q1(input: &str) -> i32 {
+    let elf_calories = get_elves(input);
     let max_elf: Option<i32> = elf_calories.max();
     max_elf.unwrap_or(-1)
 }
 
-pub fn q2(input: String) -> i32 {
-    let mut elf_calories = get_elves(&input).collect::<Vec<_>>();
+fn q2(input: &str) -> i32 {
+    let mut elf_calories = get_elves(input).collect::<Vec<_>>();
     elf_calories.sort_unstable();
     elf_calories.into_iter().rev().take(3).sum()
 }
 
-pub fn q2_alt(input: String) -> i32 {
-    let elf_calories = get_elves(&input);
+fn q2_alt(input: &str) -> i32 {
+    let elf_calories = get_elves(input);
     struct Top3 {
         fst: i32,
         sec: i32,
