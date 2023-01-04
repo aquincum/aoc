@@ -1,10 +1,10 @@
+use crate::common::day::{Day, Question};
 use itertools::Itertools;
 use regex::Regex;
 use std::collections::HashMap;
 use std::fs::read_link;
 use std::num::ParseIntError;
 use std::str::FromStr;
-use crate::common::day::{Day, Question};
 
 pub struct Day16;
 impl Day for Day16 {
@@ -22,7 +22,8 @@ Valve FF has flow rate=0; tunnels lead to valves EE, GG
 Valve GG has flow rate=0; tunnels lead to valves FF, HH
 Valve HH has flow rate=22; tunnel leads to valve GG
 Valve II has flow rate=0; tunnels lead to valves AA, JJ
-Valve JJ has flow rate=21; tunnel leads to valve II".to_string()
+Valve JJ has flow rate=21; tunnel leads to valve II"
+            .to_string()
     }
 }
 

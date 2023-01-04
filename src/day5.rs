@@ -3,13 +3,12 @@ use std::str::FromStr;
 
 use crate::common::day::{Day, Question};
 
-
 pub struct Day5;
 
 impl Day for Day5 {
     fn question(&self, input: &str, question: Question) {
         let result = run_question(input, question);
-        println!("{}",result);
+        println!("{}", result);
     }
 
     fn test_data(&self) -> String {
@@ -21,7 +20,8 @@ impl Day for Day5 {
 move 1 from 2 to 1
 move 3 from 1 to 3
 move 2 from 2 to 1
-move 1 from 1 to 2".to_string()
+move 1 from 1 to 2"
+            .to_string();
     }
 }
 
@@ -98,7 +98,7 @@ pub fn run_question(input: &str, question: Question) -> String {
     println!("{:#?}", moves);
     let run_fn = match question {
         Question::First => run_move_q1,
-        Question::Second => run_move_q2
+        Question::Second => run_move_q2,
     };
     for mv in moves {
         run_fn(&mut stacks, mv)

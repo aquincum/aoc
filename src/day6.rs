@@ -13,16 +13,15 @@ impl Day for Day6 {
         let result = run_question(input, msg_length);
         let result = match result {
             None => "no message found".to_string(),
-            Some(r) => format!("{}", r)
+            Some(r) => format!("{}", r),
         };
         println!("{}", result);
     }
 
     fn test_data(&self) -> String {
-        return "bvwbjplbgvbhsrlpgdmjqwftvncz".to_string()
+        return "bvwbjplbgvbhsrlpgdmjqwftvncz".to_string();
     }
 }
-
 
 fn run_question(input: &str, msg_length: usize) -> Option<usize> {
     let mut last_four = VecDeque::new();

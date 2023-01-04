@@ -1,5 +1,5 @@
+use crate::common::day::{Day, Question};
 use itertools::Itertools;
-use crate::common::day::{Question, Day};
 
 const DECRYPTION_CONSTANT: i128 = 811589153;
 pub const DEMO_INPUT: &str = "1
@@ -32,7 +32,7 @@ impl Num {
         Num {
             orig_value: value,
             value,
-            positions: vec![idx as i32]
+            positions: vec![idx as i32],
         }
     }
     fn pos(&self) -> i32 {
@@ -45,30 +45,43 @@ impl Num {
 
 trait Vecnum {
     fn print_state(&self);
-    fn get_nth(&self,n: usize) -> i128;
+    fn get_nth(&self, n: usize) -> i128;
 }
-
 
 impl Vecnum for Vec<Num> {
     fn print_state(&self) {
         let mut nums_to_sort = self.iter().collect_vec();
         nums_to_sort.sort_by_key(|n| n.pos());
-        println!("{}", nums_to_sort.iter().map(|n| format!("{}",n.value)).join(", "));
+        println!(
+            "{}",
+            nums_to_sort
+                .iter()
+                .map(|n| format!("{}", n.value))
+                .join(", ")
+        );
     }
     fn get_nth(&self, n: usize) -> i128 {
         let null_pos = self.iter().find(|n| n.value == 0).unwrap();
         let pos = null_pos.pos() + (n as i32);
         let pos = pos % (self.len() as i32);
-        self.iter().find(|n| n.pos() == pos).map(|n| n.orig_value).unwrap()
+        self.iter()
+            .find(|n| n.pos() == pos)
+            .map(|n| n.orig_value)
+            .unwrap()
     }
 }
 
 pub fn question(input: &str, question: Question) {
-    let mut nums: Vec<Num> = input.lines().map(|l| l.parse().unwrap()).enumerate().map(|(i, v)| Num::new(i, v)).collect_vec();
+    let mut nums: Vec<Num> = input
+        .lines()
+        .map(|l| l.parse().unwrap())
+        .enumerate()
+        .map(|(i, v)| Num::new(i, v))
+        .collect_vec();
     if question == Question::Second {
         for i in 0..nums.len() {
-            nums[i].orig_value = nums[i].value  * DECRYPTION_CONSTANT;
-            nums[i].value = (nums[i].value * DECRYPTION_CONSTANT) % ((nums.len()-1) as i128);
+            nums[i].orig_value = nums[i].value * DECRYPTION_CONSTANT;
+            nums[i].value = (nums[i].value * DECRYPTION_CONSTANT) % ((nums.len() - 1) as i128);
         }
     }
     let rounds = match question {

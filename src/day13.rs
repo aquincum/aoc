@@ -1,10 +1,10 @@
+use crate::common::day::{Day, Question};
 use itertools::Itertools;
 use serde::Deserialize;
 use serde_json::Value;
 use std::cmp::Ordering;
 use std::convert::TryFrom;
 use std::str::FromStr;
-use crate::common::day::{Day, Question};
 
 pub struct Day13;
 impl Day for Day13 {
@@ -35,7 +35,8 @@ impl Day for Day13 {
 [[]]
 
 [1,[2,[3,[4,[5,6,7]]]],8,9]
-[1,[2,[3,[4,[5,6,0]]]],8,9]".to_string()
+[1,[2,[3,[4,[5,6,0]]]],8,9]"
+            .to_string()
     }
 }
 

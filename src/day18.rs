@@ -23,7 +23,8 @@ impl Day for Day18 {
 1,2,5
 3,2,5
 2,1,5
-2,3,5".to_string()
+2,3,5"
+            .to_string()
     }
 }
 

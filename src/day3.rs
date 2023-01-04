@@ -1,7 +1,6 @@
+use crate::common::day::{Day, Question};
 use itertools::{Chunk, Itertools};
 use std::collections::HashMap;
-use crate::common::day::{Day, Question};
-
 
 pub struct Day3;
 
@@ -11,7 +10,7 @@ impl Day for Day3 {
             Question::First => q1(input),
             Question::Second => q2(input),
         };
-        println!("{}",result);
+        println!("{}", result);
     }
 
     fn test_data(&self) -> String {
@@ -20,7 +19,8 @@ jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
 PmmdzqPrVvPwwTWBwg
 wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
 ttgJtRGJQctTZtZT
-CrZsJsPPZsGzwwsLwLmpwMDw".to_string()
+CrZsJsPPZsGzwwsLwLmpwMDw"
+            .to_string();
     }
 }
 

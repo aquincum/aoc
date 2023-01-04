@@ -1,11 +1,11 @@
-use std::fs;
-use serde_json::ser::CharEscape::Quote;
-use common::day::Question;
-use clap::Parser;
 use crate::common::day::Day;
-use phf::phf_map;
+use clap::Parser;
+use common::day::Question;
 use itertools::Itertools;
+use phf::phf_map;
+use serde_json::ser::CharEscape::Quote;
 use std::any::Any;
+use std::fs;
 
 mod common;
 mod day1;
@@ -19,8 +19,9 @@ mod day16;
 mod day17;
 mod day18;
 mod day19;
-mod day20;
 mod day2;
+mod day20;
+mod day21;
 mod day3;
 mod day4;
 mod day5;
@@ -33,11 +34,11 @@ mod hackerrank;
 #[derive(Parser)]
 #[command(name = "aoc", author, version, about, long_about = None)]
 struct Cli {
-    #[arg(help="[defaults to the last day]")]
+    #[arg(help = "[defaults to the last day]")]
     day: Option<u8>,
     #[arg(value_parser=clap::value_parser!(u8).range(1..3), default_value_t=1)]
     question: u8,
-    #[arg(short,long,default_value="input.txt")]
+    #[arg(short, long, default_value = "input.txt")]
     file_name: String,
     #[arg(short, long)]
     test: bool,
@@ -45,7 +46,6 @@ struct Cli {
     #[arg(short, long)]
     list_days: bool,
 }
-
 
 fn must_read_file(filename: &str) -> String {
     fs::read_to_string(filename).expect("reading in file")
@@ -72,6 +72,7 @@ const DAYS: phf::Map<u8, &'static dyn Day> = phf_map! {
     18u8 => &day18::Day18,
     19u8 => &day19::Day19,
     20u8 => &day20::Day20,
+    21u8 => &day21::Solution,
 };
 
 fn main() {
@@ -85,15 +86,18 @@ fn main() {
     let question = match cli.question {
         1 => Question::First,
         2 => Question::Second,
-        _ => panic!("question")
+        _ => panic!("question"),
     };
     let day_n = match cli.day {
         Some(d) => d,
-        None => DAYS.keys().max().unwrap().clone()
+        None => DAYS.keys().max().unwrap().clone(),
     };
     let day = DAYS.get(&day_n);
     if day.is_none() {
-        println!("Non existent day! Avaliable days: {}", DAYS.keys().sorted().join(", "));
+        println!(
+            "Non existent day! Avaliable days: {}",
+            DAYS.keys().sorted().join(", ")
+        );
         return;
     }
     let day = day.unwrap();

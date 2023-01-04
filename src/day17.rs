@@ -1,7 +1,7 @@
+use crate::common::day::{Day, Question};
 use std::fmt::{Display, Formatter};
 use std::io::{stdin, Read};
 use std::ops::Add;
-use crate::common::day::{Day, Question};
 
 const WIDTH: usize = 7;
 const ROW_MEMORY: usize = 13;
@@ -11,17 +11,19 @@ type Bitmap = u128;
 pub struct Day17;
 impl Day for Day17 {
     fn question(&self, input: &str, question: Question) {
-        self::question(input, match question{
-            Question::First => 2022,
-            Question::Second => 1000000000000,
-        });
+        self::question(
+            input,
+            match question {
+                Question::First => 2022,
+                Question::Second => 1000000000000,
+            },
+        );
     }
 
     fn test_data(&self) -> String {
         ">>><<><>><<<>><>>><<<>>><<<><<<>><>><<>>".to_string()
     }
 }
-
 
 #[derive(Copy, Clone, Eq, PartialEq, PartialOrd, Debug)]
 struct Coordinate {

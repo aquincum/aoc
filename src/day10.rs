@@ -156,10 +156,10 @@ addx -6
 addx -11
 noop
 noop
-noop".to_string()
+noop"
+            .to_string();
     }
 }
-
 
 enum Instruction {
     Noop,

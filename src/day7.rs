@@ -1,6 +1,5 @@
 use crate::common::day::{Day, Question};
 
-
 pub struct Day7;
 
 impl Day for Day7 {
@@ -22,10 +21,10 @@ impl Day for Day7 {
     - j (file, size=4060174)
     - d.log (file, size=8033020)
     - d.ext (file, size=5626152)
-    - k (file, size=7214296)".to_string()
+    - k (file, size=7214296)"
+            .to_string();
     }
 }
-
 
 #[derive(Debug)]
 enum Entry {

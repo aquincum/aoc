@@ -8,7 +8,7 @@ impl Day for Day1 {
             Question::First => q1(input),
             Question::Second => q2(input),
         };
-        println!("{}",result);
+        println!("{}", result);
     }
 
     fn test_data(&self) -> String {
@@ -25,10 +25,10 @@ impl Day for Day1 {
 8000
 9000
 
-10000".to_string()
+10000"
+            .to_string();
     }
 }
-
 
 fn q1(input: &str) -> i32 {
     let elf_calories = get_elves(input);

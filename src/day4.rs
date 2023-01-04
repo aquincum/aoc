@@ -5,7 +5,6 @@ use std::str::FromStr;
 
 use crate::common::day::{Day, Question};
 
-
 pub struct Day4;
 
 impl Day for Day4 {
@@ -14,7 +13,7 @@ impl Day for Day4 {
             Question::First => q1(input),
             Question::Second => q2(input),
         };
-        println!("{}",result);
+        println!("{}", result);
     }
 
     fn test_data(&self) -> String {
@@ -23,10 +22,10 @@ impl Day for Day4 {
 5-7,7-9
 2-8,3-7
 6-6,4-6
-2-6,4-8".to_string()
+2-6,4-8"
+            .to_string();
     }
 }
-
 
 #[derive(Copy, Clone)]
 struct Elf {

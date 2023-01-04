@@ -1,5 +1,5 @@
+use crate::common::day::{Day, Question};
 use crate::common::map::{Bottom, Map};
-use crate::common::day::{Question, Day};
 use itertools::Itertools;
 use serde_json::ser::CharEscape::LineFeed;
 use std::borrow::Borrow;
@@ -14,7 +14,8 @@ impl Day for Day14 {
 
     fn test_data(&self) -> String {
         "498,4 -> 498,6 -> 496,6
-503,4 -> 502,4 -> 502,9 -> 494,9".to_string()
+503,4 -> 502,4 -> 502,9 -> 494,9"
+            .to_string()
     }
 }
 

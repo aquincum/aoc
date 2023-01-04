@@ -20,10 +20,10 @@ D 1
 R 4
 D 1
 L 5
-R 2".to_string()
+R 2"
+        .to_string();
     }
 }
-
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Hash)]
 struct Position {

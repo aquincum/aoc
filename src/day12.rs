@@ -1,8 +1,8 @@
+use crate::common::day::{Day, Question};
 use itertools::Itertools;
 use std::convert::From;
 use std::slice::Iter;
 use std::str::FromStr;
-use crate::common::day::{Day, Question};
 
 pub struct Day12;
 impl Day for Day12 {
@@ -15,10 +15,10 @@ impl Day for Day12 {
 abcryxxl
 accszExk
 acctuvwj
-abdefghi".to_string()
+abdefghi"
+            .to_string()
     }
 }
-
 
 struct Height {
     height: i8,

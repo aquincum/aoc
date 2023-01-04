@@ -12,10 +12,10 @@ impl Day for Day8 {
 25512
 65332
 33549
-35390".to_string()
+35390"
+            .to_string();
     }
 }
-
 
 pub fn question(input: &str) {
     let tree_map = input

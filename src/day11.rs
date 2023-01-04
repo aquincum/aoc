@@ -39,10 +39,10 @@ Monkey 3:
   Operation: new = old + 3
   Test: divisible by 17
     If true: throw to monkey 0
-    If false: throw to monkey 1".to_string()
+    If false: throw to monkey 1"
+            .to_string();
     }
 }
-
 
 #[derive(Copy, Clone, Debug)]
 enum MonkeyOperationExpr {
@@ -265,7 +265,11 @@ pub fn question(input: &str, which_question: Question) {
     let monkeys = read_monkeys(input);
     let alldiv = monkeys.iter().fold(1, |acc, m| acc * m.test.divisible);
     println!("Kozos: {}", alldiv);
-    let range_end = if which_question == Question::First { 20 } else { 10000 };
+    let range_end = if which_question == Question::First {
+        20
+    } else {
+        10000
+    };
     let mut endmonkeys = Range {
         start: 0,
         end: range_end,
