@@ -9,7 +9,7 @@ pub struct Day9;
 
 impl Day for Day9 {
     fn question(&self, input: &str, question: Question) {
-        crate::day9::question(input);
+        crate::aoc2022::day9::question(input);
     }
 
     fn test_data(&self) -> String {
@@ -127,7 +127,7 @@ impl FromStr for Direction {
     type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        use crate::day9::Direction::*;
+        use crate::aoc2022::day9::Direction::*;
         match s {
             "R" => Ok(Right),
             "L" => Ok(Left),

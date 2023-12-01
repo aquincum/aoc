@@ -4,7 +4,7 @@ pub struct Day8;
 
 impl Day for Day8 {
     fn question(&self, input: &str, question: Question) {
-        crate::day8::question(input);
+        crate::aoc2022::day8::question(input);
     }
 
     fn test_data(&self) -> String {

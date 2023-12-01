@@ -9,7 +9,7 @@ use std::str::FromStr;
 pub struct Day13;
 impl Day for Day13 {
     fn question(&self, input: &str, question: Question) {
-        crate::day13::question(input)
+        crate::aoc2022::day13::question(input)
     }
 
     fn test_data(&self) -> String {

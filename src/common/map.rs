@@ -1,4 +1,4 @@
-use crate::day14::Object;
+use crate::aoc2022::day14::Object;
 use std::borrow::Borrow;
 use std::fmt::{Display, Formatter};
 use std::net::Shutdown::Both;
