@@ -36,6 +36,7 @@ fn must_read_file(filename: &str) -> String {
 
 const DAYS_2023: phf::Map<u8, &'static dyn Day> = phf_map! {
     1u8 => &aoc2023::day1::Day1,
+    2u8 => &aoc2023::day2::Day2,
 };
 
 
