@@ -7,9 +7,9 @@ use serde_json::ser::CharEscape::Quote;
 use std::any::Any;
 use std::fs;
 
-mod common;
 mod aoc2022;
 mod aoc2023;
+mod common;
 mod hackerrank;
 
 #[derive(Parser)]
@@ -39,8 +39,8 @@ const DAYS_2023: phf::Map<u8, &'static dyn Day> = phf_map! {
     2u8 => &aoc2023::day2::Day2,
     3u8 => &aoc2023::day3::Day3,
     4u8 => &aoc2023::day4::Day4,
+    5u8 => &aoc2023::day5::Day5,
 };
-
 
 const DAYS_2022: phf::Map<u8, &'static dyn Day> = phf_map! {
     1u8 => &aoc2022::day1::Day1,
@@ -72,8 +72,13 @@ const YEARS: phf::Map<u16, phf::Map<u8, &'static dyn Day>> = phf_map! {
 };
 
 fn print_available_days() {
-    println!("Available days:\n{}", YEARS.entries().map(|(yr, days)| format!("YEAR {}: {}",yr,days.keys().sorted().join(", "))).join("\n"));
-
+    println!(
+        "Available days:\n{}",
+        YEARS
+            .entries()
+            .map(|(yr, days)| format!("YEAR {}: {}", yr, days.keys().sorted().join(", ")))
+            .join("\n")
+    );
 }
 
 fn main() {
@@ -90,13 +95,16 @@ fn main() {
         _ => panic!("question"),
     };
     let year_n = match cli.year {
-        Some(y) if y < 2000 => y+2000,
+        Some(y) if y < 2000 => y + 2000,
         Some(y) => y,
         None => YEARS.keys().max().unwrap().clone(),
     };
     let days = YEARS.get(&year_n);
-    if days.is_none(){
-        println!("Non existent year! Available years: {}", YEARS.keys().sorted().join(", "));
+    if days.is_none() {
+        println!(
+            "Non existent year! Available years: {}",
+            YEARS.keys().sorted().join(", ")
+        );
         return;
     }
     let days = days.unwrap();
@@ -106,7 +114,7 @@ fn main() {
     };
     let day = days.get(&day_n);
     if day.is_none() {
-        print!("Non existent day!") ;
+        print!("Non existent day!");
         print_available_days();
         return;
     }
@@ -116,7 +124,10 @@ fn main() {
     } else {
         must_read_file(&cli.file_name)
     };
-    println!("Running year {} day {}, {:?} question", year_n, day_n, question);
+    println!(
+        "Running year {} day {}, {:?} question",
+        year_n, day_n, question
+    );
     day.question(&input, question);
 
     // hackerrank::main();
