@@ -60,6 +60,17 @@ humidity-to-location map:
 struct Span {
     from: u128,
     to: u128,
+    transformed: bool,
+}
+
+impl Span {
+    fn clear(self) -> Span {
+        Span {
+            from: self.from,
+            to: self.to,
+            transformed: false,
+        }
+    }
 }
 
 struct Mapping {
@@ -97,17 +108,21 @@ impl Mapping {
         }
     }
     fn transform_span(&self, span: &Span) -> Vec<Span> {
-        if span.to < self.source_from || span.from > self.source_to {
+        if span.transformed {
+            vec![span.clone()]
+        } else if span.to < self.source_from || span.from > self.source_to {
             vec![span.clone()]
         } else if span.from < self.source_from && span.to <= self.source_to {
             vec![
                 Span {
                     from: span.from,
                     to: self.source_from - 1,
+                    transformed: false,
                 },
                 Span {
                     from: self.destination_from,
                     to: self.transform(&span.to),
+                    transformed: true,
                 },
             ]
         } else if span.from >= self.source_from && span.to > self.source_to {
@@ -115,10 +130,12 @@ impl Mapping {
                 Span {
                     from: self.transform(&span.from),
                     to: self.transform(&self.source_to),
+                    transformed: true,
                 },
                 Span {
                     from: self.source_to + 1,
                     to: span.to,
+                    transformed: false,
                 },
             ]
         } else if span.from < self.source_from && span.to > self.source_to {
@@ -126,20 +143,24 @@ impl Mapping {
                 Span {
                     from: span.from,
                     to: self.source_from - 1,
+                    transformed: false,
                 },
                 Span {
                     from: self.destination_from,
                     to: self.transform(&self.source_to),
+                    transformed: true,
                 },
                 Span {
                     from: self.source_to + 1,
                     to: span.to,
+                    transformed: false,
                 },
             ]
         } else {
             vec![Span {
                 from: self.transform(&span.from),
                 to: self.transform(&span.to),
+                transformed: true,
             }]
         }
     }
@@ -187,8 +208,15 @@ impl Map {
     fn transform_span(&self, span: &Span) -> Vec<Span> {
         self.mappings
             .iter()
-            .map(|mapping| mapping.transform_span(span))
-            .flatten()
+            .fold(vec![span.clone()], |spans, mapping| {
+                spans
+                    .iter()
+                    .map(|span| mapping.transform_span(span))
+                    .flatten()
+                    .collect_vec()
+            })
+            .iter()
+            .map(|span| span.clear())
             .collect_vec()
     }
 }
@@ -236,11 +264,14 @@ fn q2(input: &str) -> Result<u128, String> {
         .map(|(from, cnt)| Span {
             from: *from,
             to: *from + cnt - 1,
+            transformed: false,
         })
         .collect_vec();
     let final_spans = maps.iter().fold(spans, |spans, map| {
         println!(
-            "Spans: {}",
+            "Spans before {}-to-{}:\n{}\n",
+            map.source_type,
+            map.destination_type,
             spans
                 .iter()
                 .map(|sp| format!("FROM {} TO {}", sp.from, sp.to))
