@@ -25,7 +25,7 @@ LJ..."
 
 // row, column
 #[derive(Copy, Clone, Eq, PartialEq, Hash)]
-struct Coord(usize, usize);
+pub struct Coord(pub usize, pub usize);
 impl Coord {
     fn x(&self) -> usize {
         // column
@@ -57,7 +57,7 @@ impl Display for Coord {
 
 // I know this is not needed, but therapeutic
 #[derive(Copy, Clone, Eq, PartialEq)]
-enum Tile {
+pub enum Tile {
     Ground,
     Starter,
     Horizontal,
@@ -87,6 +87,21 @@ impl TryFrom<char> for Tile {
     }
 }
 
+impl Display for Tile {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Tile::Ground => write!(f, "."),
+            Tile::Starter => write!(f, "S"),
+            Tile::Horizontal => write!(f, "-"),
+            Tile::Vertical => write!(f, "|"),
+            Tile::L => write!(f, "L"),
+            Tile::F => write!(f, "F"),
+            Tile::J => write!(f, "J"),
+            Tile::Seven => write!(f, "7"),
+        }
+    }
+}
+
 impl Tile {
     fn next_coords(&self, coord: &Coord) -> Result<(Coord, Coord), String> {
         match self {
@@ -102,7 +117,7 @@ impl Tile {
     }
 }
 
-struct Map(Vec<Vec<Tile>>);
+pub struct Map(Vec<Vec<Tile>>);
 
 impl FromStr for Map {
     type Err = String;
@@ -113,6 +128,12 @@ impl FromStr for Map {
             .map(|line| line.chars().map(|ch| Tile::try_from(ch)).collect())
             .collect();
         rows.map(|v| Map(v))
+    }
+}
+
+impl From<Vec<Vec<Tile>>> for Map {
+    fn from(x: Vec<Vec<Tile>>) -> Self {
+        Map(x)
     }
 }
 
@@ -157,6 +178,38 @@ impl Map {
     }
     fn height(&self) -> usize {
         self.0.len()
+    }
+
+    pub fn pipes(&self) -> usize {
+        self.0
+            .iter()
+            .map(|row| row.iter().filter(|tile| tile != &&Tile::Ground).count())
+            .sum::<usize>()
+    }
+
+    pub fn draw_pipe_map(&self, pipe_map: &HashMap<Coord, bool>) {
+        for i in 0..self.height() {
+            for j in 0..self.width() {
+                if pipe_map.contains_key(&Coord(i, j)) {
+                    print!("#");
+                } else {
+                    print!(".");
+                }
+            }
+            println!();
+        }
+    }
+}
+
+impl Display for Map {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        for row in self.0.iter() {
+            for cell in row.iter() {
+                write!(f, "{}", cell);
+            }
+            writeln!(f);
+        }
+        Ok(())
     }
 }
 
@@ -248,7 +301,12 @@ fn q(input: &str, question: Question) -> Result<(usize, usize), String> {
             break steps;
         }
     };
-    let mut inside = 0;
+    let inside = calculate_insides(&map, &pipe_map);
+    Ok((steps, inside))
+}
+
+pub fn calculate_insides(map: &Map, pipe_map: &HashMap<Coord, bool>) -> usize {
+    let mut inside = 0usize;
     for i in 0..map.height() {
         let mut state = WalkThruState::Outside;
         for j in 0..map.width() {
@@ -295,7 +353,13 @@ fn q(input: &str, question: Question) -> Result<(usize, usize), String> {
                 // we are in_pipe
                 print!("P");
                 state = match tile {
-                    Tile::Ground => panic!("this isn't the world I want to live in."),
+                    Tile::Ground => panic!(
+                        "this isn't the world I want to live in. {} {} {} {:?}",
+                        i,
+                        j,
+                        tile,
+                        pipe_map.get(&Coord(i, j))
+                    ),
                     Tile::Starter | Tile::Vertical => WalkThruState::Outside, // starter is | in input; F in first test,7 in second test...
                     Tile::Horizontal => WalkThruState::Inside,
                     Tile::L => WalkThruState::InsideAfterL,
@@ -321,5 +385,5 @@ fn q(input: &str, question: Question) -> Result<(usize, usize), String> {
         }
         println!();
     }
-    Ok((steps, inside))
+    inside
 }

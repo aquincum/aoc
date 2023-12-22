@@ -1,5 +1,5 @@
 use itertools::Itertools;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::iter::FromIterator;
 use std::num::ParseIntError;
 use std::str::FromStr;
