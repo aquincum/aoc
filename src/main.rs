@@ -54,6 +54,7 @@ const DAYS_2023: phf::Map<u8, &'static dyn Day> = phf_map! {
     17u8 => &aoc2023::day17::Day17,
     18u8 => &aoc2023::day18::Day18,
     19u8 => &aoc2023::day19::Day19,
+    20u8 => &aoc2023::day20::Day20,
 };
 
 const DAYS_2022: phf::Map<u8, &'static dyn Day> = phf_map! {
