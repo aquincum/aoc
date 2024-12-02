@@ -9,6 +9,7 @@ use std::fs;
 
 mod aoc2022;
 mod aoc2023;
+mod aoc2024;
 mod common;
 mod hackerrank;
 
@@ -34,6 +35,11 @@ fn must_read_file(filename: &str) -> String {
     fs::read_to_string(filename).expect("reading in file")
 }
 
+const DAYS_2024: phf::Map<u8, &'static dyn Day> = phf_map! {
+    1u8 => &aoc2024::day1::Day1,
+    2u8 => &aoc2024::day2::Day2,
+};
+
 const DAYS_2023: phf::Map<u8, &'static dyn Day> = phf_map! {
     1u8 => &aoc2023::day1::Day1,
     2u8 => &aoc2023::day2::Day2,
@@ -56,7 +62,7 @@ const DAYS_2023: phf::Map<u8, &'static dyn Day> = phf_map! {
     19u8 => &aoc2023::day19::Day19,
     20u8 => &aoc2023::day20::Day20,
     21u8 => &aoc2023::day21::Day21,
-    // 22u8 => &aoc2023::day22::Day22,
+    22u8 => &aoc2023::day22::Day22,
     // 23u8 => &aoc2023::day23::Day23,
     // 24u8 => &aoc2023::day24::Day24,
     // 25u8 => &aoc2023::day25::Day25,
@@ -89,6 +95,7 @@ const DAYS_2022: phf::Map<u8, &'static dyn Day> = phf_map! {
 const YEARS: phf::Map<u16, phf::Map<u8, &'static dyn Day>> = phf_map! {
     2022u16 => DAYS_2022,
     2023u16 => DAYS_2023,
+    2024u16 => DAYS_2024,
 };
 
 fn print_available_days() {

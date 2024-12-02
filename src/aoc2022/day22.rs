@@ -22,7 +22,8 @@ impl Day for Solution {
         .#......
         ......#.
 
-10R5L5R10L4R5L5".to_string()
+10R5L5R10L4R5L5"
+            .to_string()
     }
 }
 
@@ -35,12 +36,14 @@ enum Pixel {
 
 #[derive(Copy, Clone, PartialOrd, PartialEq, Ord, Eq)]
 enum Facing {
-    Up, Down,
-    Left, Right
+    Up,
+    Down,
+    Left,
+    Right,
 }
 
 #[derive(Copy, Clone, PartialOrd, PartialEq, Ord, Eq)]
-struct Location{
+struct Location {
     facing: Facing,
     x: usize,
     y: usize,
@@ -52,23 +55,31 @@ impl From<char> for Pixel {
             ' ' => Pixel::Nothing,
             '#' => Pixel::Wall,
             '.' => Pixel::Open,
-            _ => panic!("Nonexistent map tile {}" , ch)
+            _ => panic!("Nonexistent map tile {}", ch),
         }
     }
 }
 
 struct Map {
-    map: Vec<Vec<Pixel>>
+    map: Vec<Vec<Pixel>>,
 }
 
 impl Map {
     fn new(s: &str) -> Self {
         let ls = s.lines().collect::<Vec<_>>();
-        let map = ls.iter().map(|l| l.chars().map(|ch| ch.into()).collect_vec()).collect_vec();
-        Self{ map }
+        let map = ls
+            .iter()
+            .map(|l| l.chars().map(|ch| ch.into()).collect_vec())
+            .collect_vec();
+        Self { map }
     }
     fn first_open_column(&self) -> usize {
-        self.map[0].iter().enumerate().find(|(i,p)| **p == Pixel::Open).map(|(i, _)| i).unwrap()
+        self.map[0]
+            .iter()
+            .enumerate()
+            .find(|(i, p)| **p == Pixel::Open)
+            .map(|(i, _)| i)
+            .unwrap()
     }
     fn max_y(&self) -> usize {
         self.map.len() - 1
@@ -80,20 +91,44 @@ impl Map {
         let mut new_xy = (loc.x, loc.y);
         loop {
             new_xy = match loc.facing {
-                Facing::Up => if loc.y == 0 { (loc.x, self.max_y()) } else { (loc.x, loc.y - 1) }
-                Facing::Down => if loc.y == self.max_y() { (loc.x, 0) } else { (loc.x, loc.y + 1) }
-                Facing::Left => if loc.x == 0 { (self.max_x(), loc.y) } else { (loc.x - 1, loc.y) }
-                Facing::Right => if loc.x == self.max_x() { (0, loc.y) } else { (loc.x + 1, loc.y) }
+                Facing::Up => {
+                    if loc.y == 0 {
+                        (loc.x, self.max_y())
+                    } else {
+                        (loc.x, loc.y - 1)
+                    }
+                }
+                Facing::Down => {
+                    if loc.y == self.max_y() {
+                        (loc.x, 0)
+                    } else {
+                        (loc.x, loc.y + 1)
+                    }
+                }
+                Facing::Left => {
+                    if loc.x == 0 {
+                        (self.max_x(), loc.y)
+                    } else {
+                        (loc.x - 1, loc.y)
+                    }
+                }
+                Facing::Right => {
+                    if loc.x == self.max_x() {
+                        (0, loc.y)
+                    } else {
+                        (loc.x + 1, loc.y)
+                    }
+                }
             };
             if self.map[new_xy.0][new_xy.1] == Pixel::Wall {
                 return loc;
             }
             if self.map[new_xy.0][new_xy.1] == Pixel::Open {
-                return Location{
+                return Location {
                     facing: loc.facing,
                     x: new_xy.0,
                     y: new_xy.1,
-                }
+                };
             }
         }
     }

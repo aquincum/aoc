@@ -1,10 +1,10 @@
 use crate::common::day::{Day, Question};
 use itertools::Itertools;
 use std::collections::HashMap;
-use std::num::ParseIntError;
-use std::str::{FromStr, Split};
-use std::ops::{Add, Sub, Mul, Div};
 use std::fmt::{Display, Formatter};
+use std::num::ParseIntError;
+use std::ops::{Add, Div, Mul, Sub};
+use std::str::{FromStr, Split};
 
 type Value = i128;
 
@@ -23,11 +23,13 @@ impl Day for Solution {
                 let root = monkeys.get("root").unwrap();
                 let res = root.evaluate(&monkeys, Question::First);
                 println!("{}", res)
-            },
+            }
             Question::Second => {
                 let root = monkeys.get("root").unwrap();
                 let root_left = monkeys.get(&root.operation.as_ref().unwrap().left).unwrap();
-                let root_right = monkeys.get(&root.operation.as_ref().unwrap().right).unwrap();
+                let root_right = monkeys
+                    .get(&root.operation.as_ref().unwrap().right)
+                    .unwrap();
                 let left_res = root_left.evaluate(&monkeys, Question::Second);
                 let right_res = root_right.evaluate(&monkeys, Question::Second);
                 println!("{}", left_res);
@@ -78,7 +80,6 @@ impl FromStr for MonkeyOperationOperator {
     }
 }
 
-
 struct ResultValue {
     constant: f64,
     x: f64,
@@ -88,8 +89,8 @@ impl Add for ResultValue {
     type Output = ResultValue;
 
     fn add(self, rhs: Self) -> Self::Output {
-        let res = ResultValue{
-            constant: self.constant+ rhs.constant,
+        let res = ResultValue {
+            constant: self.constant + rhs.constant,
             x: self.x + rhs.x,
         };
         res
@@ -99,9 +100,9 @@ impl Sub for ResultValue {
     type Output = ResultValue;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        ResultValue{
+        ResultValue {
             constant: self.constant - rhs.constant,
-            x: self.x- rhs.x,
+            x: self.x - rhs.x,
         }
     }
 }
@@ -109,13 +110,13 @@ impl Sub for ResultValue {
 impl Mul for ResultValue {
     type Output = ResultValue;
     fn mul(self, rhs: Self) -> Self::Output {
-        let res = ResultValue{
+        let res = ResultValue {
             constant: self.constant * rhs.constant,
             x: self.x * rhs.constant + self.constant * rhs.x,
         };
         if self.x > 0.0 || rhs.x > 0.0 {
             println!("*** {}*{} = {}", self, rhs, res);
-         }
+        }
         if self.x > 0.0 && rhs.x > 0.0 {
             panic!("x^2 lost: {}*{} became {}", self, rhs, res);
         }
@@ -127,11 +128,17 @@ impl Div for ResultValue {
     type Output = ResultValue;
 
     fn div(self, rhs: Self) -> Self::Output {
-        let res = match (self.x >0.0, rhs.x > 0.0){
-            (false,false) => ResultValue{constant: self.constant/rhs.constant, x:0.0},
-            (true,false) => ResultValue{constant: self.constant/rhs.constant, x:self.x/rhs.constant},
-            (false,true) => panic!("doesn't occur thankfully"),//ResultValue{constant: self.constant / rhs.constant, x:rhs.x / self.constant, dividend: self.constant},
-            _ => panic!("doesn't occur thankfully")
+        let res = match (self.x > 0.0, rhs.x > 0.0) {
+            (false, false) => ResultValue {
+                constant: self.constant / rhs.constant,
+                x: 0.0,
+            },
+            (true, false) => ResultValue {
+                constant: self.constant / rhs.constant,
+                x: self.x / rhs.constant,
+            },
+            (false, true) => panic!("doesn't occur thankfully"), //ResultValue{constant: self.constant / rhs.constant, x:rhs.x / self.constant, dividend: self.constant},
+            _ => panic!("doesn't occur thankfully"),
         };
         if self.x > 0.0 || rhs.x > 0.0 {
             println!("/// {} DIV {}  = {}", self, rhs, res);
@@ -187,10 +194,7 @@ impl FromStr for Monkey {
 
 impl MonkeyOperation {
     fn evaluate(&self, monkeys: &MonkeyMap, question: Question) -> ResultValue {
-        let left = monkeys
-            .get(&self.left)
-            .unwrap()
-            .evaluate(monkeys, question);
+        let left = monkeys.get(&self.left).unwrap().evaluate(monkeys, question);
         let right = monkeys
             .get(&self.right)
             .unwrap()
@@ -208,11 +212,17 @@ impl Monkey {
     fn evaluate(&self, monkeys: &MonkeyMap, question: Question) -> ResultValue {
         if question == Question::Second && self.name == "humn" {
             println!("gotteem");
-            return ResultValue{ constant: 0.0, x: 1.0};
+            return ResultValue {
+                constant: 0.0,
+                x: 1.0,
+            };
             // return ResultValue{constant: 3678125408017.0, x:0.0};
         }
         match &self.value {
-            Some(v) => ResultValue{ constant: v.clone() as f64, x: 0.0},
+            Some(v) => ResultValue {
+                constant: v.clone() as f64,
+                x: 0.0,
+            },
             None => match &self.operation {
                 Some(op) => op.evaluate(monkeys, question),
                 None => panic!("Huh, monkey {} is weird", self.name),
