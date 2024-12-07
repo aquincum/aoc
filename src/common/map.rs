@@ -1,7 +1,9 @@
 use crate::aoc2022::day14::Object;
+use crate::common::lines::Lineser;
+use itertools::Itertools;
 use std::borrow::Borrow;
 use std::fmt::{Display, Formatter};
-use std::net::Shutdown::Both;
+use std::str::FromStr;
 
 pub trait Bottom {
     fn bottom() -> Self;
@@ -15,6 +17,7 @@ pub struct Map<T> {
     max_y: usize,
     min_y: usize,
     floor: bool,
+    rotated: bool,
 }
 
 impl<T: Display + Default + Clone> Map<T> {
@@ -26,6 +29,7 @@ impl<T: Display + Default + Clone> Map<T> {
             min_y: 0,
             max_y: max_y + 1,
             floor,
+            rotated: false,
         };
         map.points = vec![Default::default(); map.vec_len()];
         map
@@ -44,8 +48,16 @@ impl<T: Display + Default + Clone> Map<T> {
             print!("I {}", i);
             println!("{}", self);
         }
-        let idx_x = i - self.min_x;
-        let idx_y = self.width() * j - self.min_y * self.width();
+        let idx_x = if !self.rotated {
+            i - self.min_x
+        } else {
+            j - self.min_x
+        };
+        let idx_y = if !self.rotated {
+            self.width() * j - self.min_y * self.width()
+        } else {
+            self.width() * (self.width() - i - 1) - self.min_y * self.width()
+        };
         idx_x + idx_y
     }
     pub fn set(&mut self, i: usize, j: usize, obj: T) {
@@ -54,6 +66,38 @@ impl<T: Display + Default + Clone> Map<T> {
     }
     pub fn get_ref(&self, i: usize, j: usize) -> &T {
         &self.points[self.index(i, j)]
+    }
+    pub fn rotate(&self) -> Map<T> {
+        Map {
+            points: self.points.clone(),
+            min_x: self.min_y,
+            max_x: self.max_y,
+            min_y: self.min_x,
+            max_y: self.max_x,
+            floor: self.floor,
+            rotated: !self.rotated,
+        }
+    }
+}
+
+impl FromStr for Map<char> {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let points: Vec<char> = s.chars().filter(|&c| c != '\n').collect_vec();
+        let lines = s.lines().collect_vec();
+        let max_y = lines.len() - 1;
+        let max_x = lines[0].len() - 1;
+
+        Ok(Map {
+            points,
+            floor: false,
+            min_x: 0,
+            min_y: 0,
+            max_x,
+            max_y,
+            rotated: false,
+        })
     }
 }
 
@@ -100,16 +144,27 @@ impl Map<Object> {
 
 impl<T: Display + Default + Clone> Display for Map<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        for (i, elem) in self.points.iter().enumerate() {
-            if self.floor && i >= self.max_y * self.width() {
-                write!(f, "F");
-            } else {
-                write!(f, "{}", elem);
-                if i % self.width() == self.width() - 1 {
-                    writeln!(f);
+        if self.floor && !self.rotated {
+            for (i, elem) in self.points.iter().enumerate() {
+                if i >= self.max_y * self.width() {
+                    write!(f, "F");
+                } else {
+                    write!(f, "{}", elem);
+                    if i % self.width() == self.width() - 1 {
+                        writeln!(f);
+                    }
                 }
             }
+        } else if self.floor && self.rotated {
+            writeln!(f, "rotated floor is just too much");
+        } else {
+            for x in 0..self.width() {
+                for y in 0..self.height() {
+                    write!(f, "{}", self.points[self.index(x, y)]);
+                }
+                writeln!(f);
+            }
         }
-        write!(f, "aah")
+        write!(f, "")
     }
 }
