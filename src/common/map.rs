@@ -101,6 +101,28 @@ impl FromStr for Map<char> {
     }
 }
 
+// impl<T: From<char>> FromStr for Map<T> {
+//     type Err = String;
+//
+//     fn from_str(s: &str) -> Result<Self, Self::Err> {
+//         let points: Vec<char> = s.chars().filter(|&c| c != '\n').collect_vec();
+//         let points = points.into_iter().map(|c| From::from(c)).collect_vec();
+//         let lines = s.lines().collect_vec();
+//         let max_y = lines.len() - 1;
+//         let max_x = lines[0].len() - 1;
+//
+//         Ok(Map {
+//             points,
+//             floor: false,
+//             min_x: 0,
+//             min_y: 0,
+//             max_x,
+//             max_y,
+//             rotated: false,
+//         })
+//     }
+// }
+
 impl<T: Display + Default + Clone + Copy> Map<T> {
     pub fn get_no_floor(&self, i: usize, j: usize) -> T {
         self.points[self.index(i, j)]
