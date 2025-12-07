@@ -1,18 +1,18 @@
+#[allow(unused_imports)]
 use crate::common::day::Day;
 use clap::Parser;
 use common::day::Question;
 use itertools::Itertools;
 use phf::phf_map;
-use serde_json::ser::CharEscape::Quote;
 use std::any::Any;
 use std::fs;
 
 mod aoc2022;
 mod aoc2023;
 mod aoc2024;
+mod aoc2025;
 mod common;
 mod hackerrank;
-
 #[derive(Parser)]
 #[command(name = "aoc", author, version, about, long_about = None)]
 struct Cli {
@@ -35,6 +35,13 @@ fn must_read_file(filename: &str) -> String {
     fs::read_to_string(filename).expect("reading in file")
 }
 
+const DAYS_2025: phf::Map<u8, &'static dyn Day> = phf_map! {
+    1u8 => &aoc2025::day1::Day1,
+    3u8 => &aoc2025::day3::Day3,
+    6u8 => &aoc2025::day6::Day6,
+    7u8 => &aoc2025::day7::Day7,
+};
+
 const DAYS_2024: phf::Map<u8, &'static dyn Day> = phf_map! {
     1u8 => &aoc2024::day1::Day1,
     2u8 => &aoc2024::day2::Day2,
@@ -51,6 +58,16 @@ const DAYS_2024: phf::Map<u8, &'static dyn Day> = phf_map! {
     13u8 => &aoc2024::day13::Day13,
     14u8 => &aoc2024::day14::Day14,
     15u8 => &aoc2024::day15::Day15,
+    16u8 => &aoc2024::day16::Day16,
+    17u8 => &aoc2024::day17::Day17,
+    18u8 => &aoc2024::day18::Day18,
+    19u8 => &aoc2024::day19::Day19,
+    20u8 => &aoc2024::day20::Day20,
+    21u8 => &aoc2024::day21::Day21,
+    22u8 => &aoc2024::day22::Day22,
+    23u8 => &aoc2024::day23::Day23,
+    24u8 => &aoc2024::day24::Day24,
+    25u8 => &aoc2024::day25::Day25,
 };
 
 const DAYS_2023: phf::Map<u8, &'static dyn Day> = phf_map! {
@@ -109,6 +126,7 @@ const YEARS: phf::Map<u16, phf::Map<u8, &'static dyn Day>> = phf_map! {
     2022u16 => DAYS_2022,
     2023u16 => DAYS_2023,
     2024u16 => DAYS_2024,
+    2025u16 => DAYS_2025,
 };
 
 fn print_available_days() {

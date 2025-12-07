@@ -90,6 +90,7 @@ dependencies = [
  "regex",
  "serde",
  "serde_json",
+ "utf-railroad",
 ]
 
 [[package]]
@@ -1107,6 +1108,12 @@ name = "unicode-ident"
 version = "1.0.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "adb9e6ca4f869e1180728b7950e35922a7fc6397f7b641499e8f3ef06e50dc83"
+
+[[package]]
+name = "utf-railroad"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b4e3b9651f9826f85ac5bef08263c43db52414c49be19eff5112b0c7955a7a1e"
 
 [[package]]
 name = "utf8parse"
