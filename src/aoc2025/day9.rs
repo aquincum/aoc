@@ -20,7 +20,13 @@ impl Day for Day9 {
         let pairwise_vec = (0..points.len())
             .map(|i| {
                 (i + 1..points.len())
-                    .map(|j| build_pairwise(&points, i, j))
+                    .filter_map(|j| {
+                        if !points[i].added && !points[j].added {
+                            Some(build_pairwise(&points, i, j))
+                        } else {
+                            None
+                        }
+                    })
                     .collect_vec()
             })
             .concat();
@@ -31,12 +37,12 @@ impl Day for Day9 {
                 i != pw.i1 && i != pw.i2 && p.between(&points[pw.i1], &points[pw.i2])
             });
             if !concave {
-                println!("q2: {}", pw.area);
+                println!("q2: {}", pw.area); // 4549093344 too high 1381772324 too low
                 println!(
                     "{},{} {},{}",
                     points[pw.i1].x, points[pw.i1].y, points[pw.i2].x, points[pw.i2].y
                 );
-                paint(&points);
+                paint(&points, &points[pw.i1], &points[pw.i2]);
                 break;
             }
         }
@@ -58,6 +64,7 @@ impl Day for Day9 {
 struct Point2D {
     x: u32,
     y: u32,
+    added: bool,
 }
 
 impl Point2D {
@@ -76,12 +83,14 @@ impl FromStr for Point2D {
     type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let added = s.chars().nth(0).unwrap() == '!';
+        let s = if added { &s[1..] } else { s };
         let (x, y) = s
             .split(",")
             .map(|s| s.parse::<u32>().unwrap())
             .collect_tuple()
             .ok_or(format!("bad 2d point: {}", s))?;
-        Ok(Point2D { x, y })
+        Ok(Point2D { x, y, added })
     }
 }
 fn area(p1: &Point2D, p2: &Point2D) -> u128 {
@@ -119,7 +128,7 @@ impl Ord for Pairwise {
     }
 }
 
-fn paint(points: &Vec<Point2D>) {
+fn paint(points: &Vec<Point2D>, p1: &Point2D, p2: &Point2D) {
     let width = points.iter().map(|p| p.x).max().unwrap() + 300;
     let height = points.iter().map(|p| p.y).max().unwrap() + 300;
     let mut image_buf =
@@ -143,6 +152,16 @@ fn paint(points: &Vec<Point2D>) {
         }
         let point = image_buf.get_pixel_mut(points[i].x / 100, points[i].y / 100);
         *point = image::Rgb([255u8, 255u8, 255u8]);
+    }
+    let smalx = p1.x.min(p2.x) / 100;
+    let smaly = p1.y.min(p2.y) / 100;
+    let bigx = p1.x.max(p2.x) / 100;
+    let bigy = p1.y.max(p2.y) / 100;
+    for x in smalx..bigx + 1 {
+        for y in smaly..bigy + 1 {
+            let point = image_buf.get_pixel_mut(x, y);
+            *point = image::Rgb([0u8, 0u8, 255u8]);
+        }
     }
     image_buf.save("202509.png").unwrap();
 }
